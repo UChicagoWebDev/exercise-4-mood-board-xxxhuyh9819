@@ -12,8 +12,7 @@ function reqListener(event) {
   renderResult(results, resultContainer)
 
   // we only want first 10 concepts
-  const relatedSearches = response["relatedSearches"].slice(0, 10)
-  console.log(relatedSearches)
+  const relatedSearches = response["relatedSearches"]
   const conceptList = document.getElementById("suggestionsList")
 
   renderConcept(relatedSearches, conceptList)
@@ -42,8 +41,9 @@ function renderResult(results, container) {
  * @param container a DOM element that contains newly created DOMs
  */
 function renderConcept(concepts, container) {
-  for (let i = 0; i < concepts.length; i++) {
+  for (let i = 0; i < Math.min(concepts.length, 10); i++) {
     let listItem = document.createElement("li")
+    listItem.className = "concept"
     listItem.textContent = concepts[i].text
     container.appendChild(listItem)
   }
@@ -54,10 +54,9 @@ function renderConcept(concepts, container) {
  */
 function clear() {
   const resultsContainer = document.getElementById("resultsImageContainer")
-  const resultsArray = Array.from(resultsContainer.children)
-  resultsArray.forEach((result) => {
-    resultsContainer.removeChild(result)
-  })
+  resultsContainer.innerHTML = ""
+  const conceptContainer = document.getElementById("suggestionsList")
+  conceptContainer.innerHTML = ""
 }
 
 function runSearch() {
@@ -73,8 +72,6 @@ function runSearch() {
   let request = new XMLHttpRequest();
   const input = document.querySelector('.form').querySelector("#searchInput").value
   const url = bing_api_endpoint + "?q=" + input
-  console.log(url)
-
 
   // TODO: Construct the request object and add appropriate event listeners to
   //   - HINT: You'll need to ad even listeners to them after you add them to the DOM
@@ -111,3 +108,16 @@ document.querySelector("#closeResultsButton").addEventListener("click", closeRes
 document.querySelector("body").addEventListener("keydown", (e) => {
   if(e.key == "Escape") {closeResultsPane()}
 });
+
+/**
+ * An action listener added to the suggestions list
+ * If clicking on a list item, the text content will be retrieved, applied to the search input, and perform a new search
+ * If clicking on the empty space, nothing happens, since the click is deactivated (in CSS)
+ */
+document.querySelector("#suggestionsList").addEventListener("click", (e) => {
+  const concept = e.target.textContent
+  const inputField = document.querySelector('.form').querySelector("#searchInput")
+  inputField.value = concept
+  runSearch()
+})
+
