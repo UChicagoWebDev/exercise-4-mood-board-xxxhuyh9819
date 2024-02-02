@@ -11,11 +11,13 @@ function reqListener(event) {
 
   renderResult(results, resultContainer)
 
-  // we only want first 10 concepts
   const relatedSearches = response["relatedSearches"]
   const conceptList = document.getElementById("suggestionsList")
 
-  renderConcept(relatedSearches, conceptList)
+  // if the related searches is undefined, the concepts won't be rendered
+  if (relatedSearches !== undefined) {
+    renderConcept(relatedSearches, conceptList)
+  }
 }
 
 /**
@@ -41,6 +43,7 @@ function renderResult(results, container) {
  * @param container a DOM element that contains newly created DOMs
  */
 function renderConcept(concepts, container) {
+  // we only want first 10 concepts
   for (let i = 0; i < Math.min(concepts.length, 10); i++) {
     let listItem = document.createElement("li")
     listItem.className = "concept"
