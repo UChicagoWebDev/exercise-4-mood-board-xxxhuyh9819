@@ -6,18 +6,46 @@ const bing_api_key = BING_API_KEY
  */
 function reqListener(event) {
   const response = event.target.response
-  // console.log(response)
-  const imagesReceived = response["value"].slice(0, 10)
+  const results = response["value"].slice(0, 18)
   const resultContainer = document.querySelector("#resultsImageContainer")
 
-  for (let i = 0; i < imagesReceived.length; i++) {
+  renderResult(results, resultContainer)
+
+  // we only want first 10 concepts
+  const relatedSearches = response["relatedSearches"].slice(0, 10)
+  console.log(relatedSearches)
+  const conceptList = document.getElementById("suggestionsList")
+
+  renderConcept(relatedSearches, conceptList)
+}
+
+/**
+ * An extracted function to render result images
+ * @param results an array of results received
+ * @param container a DOM element that contains newly created DOMs
+ */
+function renderResult(results, container) {
+  for (let i = 0; i < results.length; i++) {
     let imageDiv = document.createElement("div");
     imageDiv.className = "resultImage"
     let image = document.createElement('img');
-    image.src = imagesReceived[i]["contentUrl"]
-    image.alt = imagesReceived[i]["name"]
+    image.src = results[i]["contentUrl"]
+    image.alt = results[i]["name"]
     imageDiv.appendChild(image);
-    resultContainer.appendChild(imageDiv)
+    container.appendChild(imageDiv)
+  }
+}
+
+/**
+ * An extracted function to render concepts
+ * @param concepts an array of concepts received
+ * @param container a DOM element that contains newly created DOMs
+ */
+function renderConcept(concepts, container) {
+  for (let i = 0; i < concepts.length; i++) {
+    let listItem = document.createElement("li")
+    listItem.textContent = concepts[i].text
+    container.appendChild(listItem)
   }
 }
 
@@ -49,11 +77,7 @@ function runSearch() {
 
 
   // TODO: Construct the request object and add appropriate event listeners to
-
-  //   - When you get your responses, add elements to the DOM in #resultsImageContainer to
-  //     display them to the user
   //   - HINT: You'll need to ad even listeners to them after you add them to the DOM
-
   request.responseType = "json"
 
   request.addEventListener("load", reqListener);
