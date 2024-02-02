@@ -6,8 +6,8 @@ const bing_api_key = BING_API_KEY
  */
 function reqListener(event) {
   const response = event.target.response
-  console.log(response)
-  const imagesReceived = response["value"]
+  // console.log(response)
+  const imagesReceived = response["value"].slice(0, 10)
   const resultContainer = document.querySelector("#resultsImageContainer")
 
   for (let i = 0; i < imagesReceived.length; i++) {
@@ -21,9 +21,21 @@ function reqListener(event) {
   }
 }
 
+/**
+ * A function to clear previous search results in a new search
+ */
+function clear() {
+  const resultsContainer = document.getElementById("resultsImageContainer")
+  const resultsArray = Array.from(resultsContainer.children)
+  resultsArray.forEach((result) => {
+    resultsContainer.removeChild(result)
+  })
+}
+
 function runSearch() {
 
   // TODO: Clear the results pane before you run a new search
+  clear()
 
   openResultsPane();
 
