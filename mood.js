@@ -33,6 +33,15 @@ function renderResult(results, container) {
     image.src = results[i]["contentUrl"]
     image.alt = results[i]["name"]
     imageDiv.appendChild(image);
+
+    // add an event listener to each image in the result panel
+    image.addEventListener("click", () => {
+      let board = document.getElementById("board")
+      const saveImageDiv = document.createElement("div")
+      saveImageDiv.className = "savedImage"
+      saveImageDiv.appendChild(image)
+      board.appendChild(saveImageDiv)
+    })
     container.appendChild(imageDiv)
   }
 }
@@ -123,4 +132,3 @@ document.querySelector("#suggestionsList").addEventListener("click", (e) => {
   inputField.value = concept
   runSearch()
 })
-
