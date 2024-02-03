@@ -79,19 +79,18 @@ function runSearch() {
   openResultsPane();
 
   // TODO: Build your query by combining the bing_api_endpoint and a query attribute
-  //  named 'q' that takes the value from the search bar input field.
 
   let request = new XMLHttpRequest();
   const input = document.querySelector('.form').querySelector("#searchInput").value
   const url = bing_api_endpoint + "?q=" + input
 
   // TODO: Construct the request object and add appropriate event listeners to
-  //   - HINT: You'll need to ad even listeners to them after you add them to the DOM
   request.responseType = "json"
 
   request.addEventListener("load", reqListener);
   request.open("GET", url);
   request.setRequestHeader("Ocp-Apim-Subscription-Key", bing_api_key);
+
   // TODO: Send the request
   request.send();
 
